@@ -82,14 +82,14 @@ const galleryItems = [
 //   `
 // }
 
-// вернуть в а href= "${galleryItem.original}" чтобы работало также
+// вернуть в а href= "${galleryItem.original}" чтобы работало также event.preventDefault();
 
 const makeGalleryElement = galleryItem => {
   return `
   <li class="gallery__item">
   <a
     class="gallery__link"
-     href= "#"
+     href= "${galleryItem.original}"
   >
     <img
       class="gallery__image"
@@ -126,12 +126,23 @@ const makeGallery = galleryItems
 galleryEl.insertAdjacentHTML('beforeend', makeGallery);
 
 const galleryItemImageEl = document.querySelectorAll('.gallery__image'); // изображение внутри ссылки
+const imagesOriginal = galleryItems.map((el) => el.original);
+// console.log(imagesOriginal);
+console.log(galleryItemImageEl[8].dataset.source);
+console.log(galleryItemImageEl[8]);
+console.log(galleryItemImageEl);
+// const galleryImageSrc = galleryItemImageEl.map((el) => el.alt);
+const lastIndex = galleryItemImageEl.length;
+// console.log(imagesOriginal[0] === galleryItemImageEl[0].dataset.source);
+// console.log(galleryImageSrc);
+
 
 galleryEl.addEventListener('click', onClick);
 function onClick(event) {
   // if (event.target.nodeName !== "LI") {
   //   return
   // }
+  event.preventDefault();
   if (!event.target.classList.contains('gallery__image')) {
     return
   }
@@ -178,64 +189,56 @@ function onEscPress(event) {
   if (event.code === 'Escape') {
     onBtnCloseModalClick();
   }
+  let curIndex = imagesOriginal.indexOf(lightboxImageEl.src);
   console.log(event);
   // перебираем массив изображений в списке ул,
   // при нажатии клавиши вправо проверяем срц текущего изображения в модалке равно сорсу какого
   // изображения в списке ул. если равно - то заменяем срц текущего на сорс следующего изображения
   // решить вопрос с индексами чтобы при вычитании и сложении не выходить за рамки 0 - 8
-  // if (event.code === 'ArrowLeft') {
-  //   console.log('Листаем влево');
-  //   galleryItemImageEl.forEach((img, index) => {
-  //     console.log(index);
-  //     // console.log(galleryItemImageEl[index]);
-  //     if (galleryItemImageEl[index].dataset.source === lightboxImageEl.src && index !== 0) {
-  //       console.log('True');
-  //       console.log(index);
-  //       // console.log(galleryItemImageEl[index].dataset.source);
-  //       // index += 1;
-  //       // console.log(galleryItemImageEl[index].dataset.source);
-  //       lightboxImageEl.src = galleryItemImageEl[index - 1].dataset.source;
-  //     }
-  //     if (galleryItemImageEl[index].dataset.source === lightboxImageEl.src && index === 0) {
-  //       lightboxImageEl.src = galleryItemImageEl[8].dataset.source;
-  //     }
-  //   }
-  //   )
-    // console.log(galleryEl.nextElementSibling);
-    // console.log(galleryItemImageEl[index]);
-    // console.log(galleryItemImageEl);
-    // console.log(galleryItemImageEl.nextElementSibling);
-  // };
-  if (event.code === 'ArrowRight') {
-    console.log('Листаем вправо');
+  // добавить значение альт
+  if (event.code === 'ArrowLeft') {
+    console.log('Листаем влево');
+    console.log(galleryItemImageEl);
+    // console.log(galleryItemImageEl.indexOf(lightboxImageEl));
+    console.log(imagesOriginal.indexOf(lightboxImageEl.src));
+    
+    
+    // console.log(galleryItemImageEl[8].src);
     galleryItemImageEl.forEach((img, index) => {
       console.log(index);
       // console.log(galleryItemImageEl[index]);
-      if (galleryItemImageEl[index].dataset.source === lightboxImageEl.src && index !== 8) {
+      if (galleryItemImageEl[index].dataset.source === lightboxImageEl.src && index !== 0) {
         console.log('True');
         console.log(index);
         // console.log(galleryItemImageEl[index].dataset.source);
         // index += 1;
         // console.log(galleryItemImageEl[index].dataset.source);
-        lightboxImageEl.src = galleryItemImageEl[index + 1].dataset.source;
+        lightboxImageEl.src = galleryItemImageEl[curIndex - 1].dataset.source;
       }
-      if (galleryItemImageEl[index].dataset.source === lightboxImageEl.src && index === 8) {
-        lightboxImageEl.src = galleryItemImageEl[0].dataset.source;
+      if (galleryItemImageEl[curIndex].dataset.source === lightboxImageEl.src && index === 0) {
+        lightboxImageEl.src = galleryItemImageEl[lastIndex - 1].dataset.source;
+        console.log('девятое изображение');
       }
-    })
-    
-
-    // lightboxImageEl.src = event.target.dataset.source;
-    //   lightboxImageEl.alt = event.target.alt;
-
-    // const nextEl = lightboxImageEl.nextElementSibling;
-    // console.log(nextEl);
-    // lightboxImageEl.src = event.nextElementSibling.target.dataset.source;
-    //   }
-    //   if (event.code === 'ArrowLeft') {
-    //     console.log('листаем влево');
-    //   }
+    }
+    )
   }
-}
+    if (event.code === 'ArrowRight') {
+      console.log('Листаем вправо');
+      galleryItemImageEl.forEach((img, index) => {
+        console.log(index);
+        console.log(galleryItemImageEl[index]);
+        if (galleryItemImageEl[index].dataset.source === lightboxImageEl.src && index !== 8) {
+          console.log('True');
+          console.log(index);
+          lightboxImageEl.src = galleryItemImageEl[curIndex + 1].dataset.source;
+        }
+        if (galleryItemImageEl[curIndex].dataset.source === lightboxImageEl.src && index === 8) {
+          console.log('True');
+          lightboxImageEl.src = galleryItemImageEl[0].dataset.source;
+          // console.log(galleryItemImageEl[index].dataset.source === lightboxImageEl.src && index === 8);
+        }
+      })
+    }
+  }
 // console.log(galleryEl);
 // console.log(galleryItemImageEl[5]);
